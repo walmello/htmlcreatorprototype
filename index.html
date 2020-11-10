@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+        }
+
+        .box{
+            border: 2px solid black;
+        }
+
+        .floating {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+        }
+
+        #drawarea {
+            width: 100%;
+            height: 100%;
+        }
+
+        #toolbar {
+            position: fixed;
+            width: 100vw;
+            z-index: 100;
+            background-color: white;
+            padding: 1rem;
+        }
+
+        .colorbox {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid black;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="toolbar">
+        <p>
+            Modo : <span id="mode">box</span>
+        </p>
+        <p>
+            Cor : <span id="color" class="colorbox"></span>
+        </p>
+        <button onclick="changeMode('box')">
+            Box
+        </button>
+        <button onclick="changeMode('resize')">
+            Resize
+        </button>
+        <button onclick="changeMode('delete')">
+            Delete
+        </button>
+        <button onclick="changeMode('h1')">
+            H1
+        </button>
+        <button onclick="changeColor('#ff00ff')" class="colorbox" style="background-color: #ff00ff;">            
+        </button>
+        <button onclick="alert(this)">
+            alert
+        </button>
+        <hr>    
+    </div>
+    <div id="drawarea" onclick="drawaInArea()">
+        
+    </div>
+    <script>
+        let mode = document.querySelector("#mode")
+        let color = document.querySelector("#color")
+
+
+        const changeMode = newmode => mode.innerHTML = newmode
+
+        const changeColor = newcolor => color.style.backgroundColor = newcolor
+        
+        const drawaInArea = _ => {
+            if(mode.innerHTML == 'box'){
+                createBox('div')
+            }
+            if(mode.innerHTML == 'h1'){
+                createTag('h1')
+            }
+        }
+
+        const selectedElement = element => {
+            if(mode.innerHTML == 'draw'){
+                dragElement()
+            }
+            if(mode.innerHTML == 'delete'){
+                deleteElement(element)
+                alert(element)
+            }
+        }
+
+        const createBox = tag => {
+            const el = document.createElement(tag)
+            el.classList.add("floating")
+            el.classList.add("box")
+            el.style.left = "" + (window.event.screenX - 50) + "px"
+            el.style.top  = "" + (window.event.screenY - 120) + "px"
+            el.style.backgroundColor = color.style.backgroundColor
+            el.onclick = _ => selectedElement(el)
+
+
+            document.querySelector("#drawarea").appendChild(el)
+        }
+
+        const dragElement = _ => {
+
+        }
+
+        const deleteElement = _ => {
+
+        }
+
+        const createTag = tag => {
+            const el = document.createElement(tag)
+            el.classList.add("floating")
+            el.innerHTML = 'Texto'
+            el.style.left = "" + (window.event.screenX - 50) + "px"
+            el.style.top  = "" + (window.event.screenY - 120) + "px"
+            el.style.backgroundColor = color.style.backgroundColor
+            el.onclick = selectedElement
+
+            document.querySelector("#drawarea").appendChild(el)
+        }
+    </script>
+</body>
+</html>
